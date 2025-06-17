@@ -1,6 +1,8 @@
 package mx.edu.utez.warehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import java.util.Random;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Cede {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +23,11 @@ public class Cede {
     private String claveCede;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^[a-zA-ZñÑ\\s]+$", message = "Solo se permiten letras y espacios")
     private String estado;
 
     @Column(nullable = false)
+    @Pattern(regexp = "^[a-zA-ZñÑ\\s]+$", message = "Solo se permiten letras y espacios")
     private String municipio;
 
     @PrePersist
@@ -30,9 +35,9 @@ public class Cede {
         if (this.claveCede == null) {
 
             Random random = new Random();
-            int randomDigits = 1000 + random.nextInt(9000); // 4 random digits
+            int randomDigits = 1000 + random.nextInt(9000);
             String datePart = LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("ddMMyyyy"));
-            this.claveCede = "C-TEMP-" + datePart + "-" + String.format("%04d", randomDigits); // TEMP placeholder
+            this.claveCede = "C-TEMP-" + datePart + "-" + String.format("%04d", randomDigits);
         }
     }
 }
